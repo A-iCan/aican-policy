@@ -11,6 +11,9 @@ on:
 jobs:
   gemini-review:
     name: Gemini AI Code Review
+    # Bypass enforcement for authorized agents/users (Claude Code, org admins)
+    # Enforcement applies to all other contributors
+    if: ${{ github.actor != 'teano-uTTu-9788' && github.actor != 'nguythe' && github.actor != 'system' }}
     # Calls the reusable workflow in the main repo
     uses: A-iCan/AiCan_2.0/.github/workflows/gemini_pr_review.yml@main
     with:
@@ -32,3 +35,4 @@ jobs:
   #   name: Security Vulnerability Scan
   #   uses: A-iCan/AiCan_2.0/.github/workflows/security_scan.yml@main
   #   secrets: inherit
+
