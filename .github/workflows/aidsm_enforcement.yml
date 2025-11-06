@@ -1,0 +1,34 @@
+name: AiDSM Org Policy (Required Workflow)
+
+# Organization-wide policy enforcement via GitHub Enterprise Required Workflows
+# Authority: Standard Operating Procedure v24.1
+# Scope: All repositories in A-iCan organization
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  gemini-review:
+    name: Gemini AI Code Review
+    # Calls the reusable workflow in the main repo
+    uses: A-iCan/AiCan_2.0/.github/workflows/gemini_pr_review.yml@main
+    with:
+      # Pass the PR number from this policy workflow's context
+      pr_number: ${{ github.event.pull_request.number }}
+    secrets:
+      # Map org secret to the name expected by callee
+      # Callee maps this to GOOGLE_API_KEY for Gemini SDK
+      PASSED_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  
+  # Future org-wide gates can be added here:
+  # 
+  # statistical-gate:
+  #   name: Zero-Regression Statistical Validation
+  #   uses: A-iCan/AiCan_2.0/.github/workflows/statistical_gate.yml@main
+  #   secrets: inherit
+  # 
+  # security-scan:
+  #   name: Security Vulnerability Scan
+  #   uses: A-iCan/AiCan_2.0/.github/workflows/security_scan.yml@main
+  #   secrets: inherit
